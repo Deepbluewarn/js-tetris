@@ -8,19 +8,20 @@ class Board {
   requestId;
   time;
 
-  constructor(ctx, ctxNext) {
+  constructor(ctx, ctxNext, ctxHold) {
     this.ctx = ctx;
     this.ctxNext = ctxNext;
-    this.init();
+    this.ctxHold = ctxHold;
+    this.init(this.ctx, COLS, ROWS);
+    this.init(this.ctxNext, 4, 4);
+    this.init(this.ctxHold, 4, 4);
   }
 
-  init() {
-    // Calculate size of canvas from constants.
-    this.ctx.canvas.width = COLS * BLOCK_SIZE;
-    this.ctx.canvas.height = ROWS * BLOCK_SIZE;
-
-    // Scale so we don't need to give size on every draw.
-    this.ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
+  init(ctx, row, col) {
+    ctx.canvas.width = row * BLOCK_SIZE;
+    ctx.canvas.height = col * BLOCK_SIZE;
+    ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
+    console.log('ctx init. %o', ctx);
   }
 
   reset() {
