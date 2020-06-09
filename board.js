@@ -1,4 +1,4 @@
-class Board {//test
+class Board {
   ctx;
   ctxNext;
   ctxHold;
