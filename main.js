@@ -44,6 +44,9 @@ function addEventListener() {
     if (event.keyCode === KEY.P) {
       pause();
     }
+    if(event.keyCode === KEY.H){
+      board.holdPiece();
+    }
     if (event.keyCode === KEY.ESC) {
       gameOver();
     } else if (moves[event.keyCode]) {

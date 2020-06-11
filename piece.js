@@ -7,13 +7,16 @@ class Piece {
   typeId;
   hardDropped;
 
-  constructor(ctx) {
+  constructor(ctx, typeId) {
     this.ctx = ctx;
+    this.typeId = typeId;
     this.spawn();
   }
 
   spawn() {
-    this.typeId = this.randomizeTetrominoType(COLORS.length - 1);
+    if(!this.typeId){
+      this.typeId = this.randomizeTetrominoType(COLORS.length - 1);
+    }
     this.shape = SHAPES[this.typeId];
     this.color = COLORS[this.typeId];
     this.x = 0;

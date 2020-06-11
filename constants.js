@@ -38,7 +38,8 @@ const KEY = {
   RIGHT: 39,
   DOWN: 40,
   P: 80,
-  Q: 81
+  Q: 81,
+  H: 72
 }
 Object.freeze(KEY);
 

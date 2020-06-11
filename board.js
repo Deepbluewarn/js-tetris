@@ -5,6 +5,8 @@ class Board {
   grid;
   piece;
   next;
+  hold;
+  holded;
   requestId;
   time;
 
@@ -12,6 +14,7 @@ class Board {
     this.ctx = ctx;
     this.ctxNext = ctxNext;
     this.ctxHold = ctxHold;
+    this.holded = false;
     this.init(this.ctx, COLS, ROWS);
     this.init(this.ctxNext, 4, 4);
     this.init(this.ctxHold, 4, 4);
@@ -35,11 +38,31 @@ class Board {
     this.next = new Piece(this.ctxNext);
     this.ctxNext.clearRect(
       0,
-      0, 
-      this.ctxNext.canvas.width, 
+      0,
+      this.ctxNext.canvas.width,
       this.ctxNext.canvas.height
     );
     this.next.draw();
+  }
+
+  holdPiece() {
+    if (!this.holded) {
+      if(!this.hold){
+        this.hold = new Piece(this.ctx, this.piece.typeId);
+      }else{
+        let current_piece = this.piece.typeId;
+        let current_hold = this.hold.typeId;
+        this.piece = new Piece(this.ctx, current_hold);
+        this.hold = new Piece(this.ctxHold, current_piece);
+      }
+      this.ctxHold.clearRect(0, 0, this.ctxHold.canvas.width, this.ctxHold.canvas.height);
+      this.hold.draw();
+      this.piece.setStartingPosition();
+      this.getNewPiece();
+      this.holded = true;
+    } else {
+      console.log('false!');
+    }
   }
 
   draw() {
@@ -62,6 +85,7 @@ class Board {
       this.piece.ctx = this.ctx;
       this.piece.setStartingPosition();
       this.getNewPiece();
+      this.holded = false;
     }
     return true;
   }
@@ -82,7 +106,7 @@ class Board {
         this.grid.unshift(Array(COLS).fill(0));
       }
     });
-    
+
     if (lines > 0) {
       // Calculate points from cleared lines and level.
 
@@ -92,8 +116,8 @@ class Board {
       // If we have reached the lines for next level
       if (account.lines >= LINES_PER_LEVEL) {
         // Goto next level
-        account.level++;  
-        
+        account.level++;
+
         // Remove lines so we start working for the next level
         account.lines -= LINES_PER_LEVEL;
 
@@ -153,10 +177,10 @@ class Board {
     return this.grid[y] && this.grid[y][x] === 0;
   }
 
-  rotate(piece,direction) {
+  rotate(piece, direction) {
     // Clone with JSON for immutability.
     let p = JSON.parse(JSON.stringify(piece));
-    if(!piece.hardDropped){
+    if (!piece.hardDropped) {
       // Transpose matrix
       for (let y = 0; y < p.shape.length; ++y) {
         for (let x = 0; x < y; ++x) {
@@ -164,13 +188,13 @@ class Board {
         }
       }
       // Reverse the order of the columns.
-      if(direction === ROTATION.RIGHT) {
+      if (direction === ROTATION.RIGHT) {
         p.shape.forEach(row => row.reverse());
       } else if (direction === ROTATION.LEFT) {
         p.shape.reverse();
       }
     }
-    
+
     return p;
   }
 
@@ -179,12 +203,12 @@ class Board {
       lines === 1
         ? POINTS.SINGLE
         : lines === 2
-        ? POINTS.DOUBLE
-        : lines === 3
-        ? POINTS.TRIPLE
-        : lines === 4
-        ? POINTS.TETRIS
-        : 0;
+          ? POINTS.DOUBLE
+          : lines === 3
+            ? POINTS.TRIPLE
+            : lines === 4
+              ? POINTS.TETRIS
+              : 0;
 
     return (account.level + 1) * lineClearPoints;
   }
