@@ -5,7 +5,7 @@ class Board {
   grid;
   piece;
   next;
-  hold;
+  hold; 
   holded;
   requestId;
   time;
